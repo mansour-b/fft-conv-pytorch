@@ -11,9 +11,11 @@ from torch.fft import irfftn, rfftn
 def complex_matmul(a: Tensor, b: Tensor, groups: int = 1) -> Tensor:
     """Multiplies two complex-valued tensors."""
     # Scalar matrix multiplication of two tensors, over only the first channel
-    # dimensions. Dimensions 3 and higher will have the same shape after multiplication.
-    # We also allow for "grouped" multiplications, where multiple sections of channels
-    # are multiplied independently of one another (required for group convolutions).
+    # dimensions. Dimensions 3 and higher will have the same shape after
+    # multiplication.
+    # We also allow for "grouped" multiplications, where multiple sections of
+    # channels are multiplied independently of one another (required for group
+    # convolutions).
     a = a.view(a.size(0), groups, -1, *a.shape[2:])
     b = b.view(groups, -1, *b.shape[1:])
 
@@ -32,8 +34,10 @@ def complex_matmul(a: Tensor, b: Tensor, groups: int = 1) -> Tensor:
 
 
 def to_ntuple(val: Union[int, Iterable[int]], n: int) -> Tuple[int, ...]:
-    """Casts to a tuple with length 'n'.  Useful for automatically computing the
-    padding and stride for convolutions, where users may only provide an integer.
+    """Casts to a tuple with length 'n'.
+
+    Useful for automatically computing the padding and stride for convolutions,
+    where users may only provide an integer.
 
     Args:
         val: (Union[int, Iterable[int]]) Value to cast into a tuple.
@@ -65,18 +69,20 @@ def fft_conv(
     groups: int = 1,
 ) -> Tensor:
     """Performs N-d convolution of Tensors using a fast fourier transform, which
-    is very fast for large kernel sizes. Also, optionally adds a bias Tensor after
-    the convolution (in order ot mimic the PyTorch direct convolution).
+    is very fast for large kernel sizes. Also, optionally adds a bias Tensor
+    after the convolution (in order ot mimic the PyTorch direct convolution).
 
     Args:
         signal: (Tensor) Input tensor to be convolved with the kernel.
         kernel: (Tensor) Convolution kernel.
         bias: (Tensor) Bias tensor to add to the output.
-        padding: (Union[int, Iterable[int], str) If int, Number of zero samples to pad then
-            input on the last dimension. If str, "same" supported to pad input for size preservation.
-        padding_mode: (str) Padding mode to use from {constant, reflection, replication}.
-                      reflection not available for 3d.
-        stride: (Union[int, Iterable[int]) Stride size for computing output values.
+        padding: (Union[int, Iterable[int], str) If int, Number of zero samples
+            to pad then input on the last dimension. If str, "same" supported
+            to pad input for size preservation.
+        padding_mode: (str) Padding mode to use from {constant, reflection,
+            replication}. reflection not available for 3d.
+        stride: (Union[int, Iterable[int]) Stride size for computing
+            output values.
         dilation: (Union[int, Iterable[int]) Dilation rate for the kernel.
         groups: (int) Number of groups for the convolution.
 
@@ -110,12 +116,14 @@ def fft_conv(
     # pad the kernel internally according to the dilation parameters
     kernel = torch.kron(kernel, offset)[(slice(None), slice(None)) + cutoff]
 
-    # Pad the input signal & kernel tensors (round to support even sized convolutions)
+    # Pad the input signal & kernel tensors (round to support even sized
+    # convolutions)
     signal_padding = [r(p) for p in padding_[::-1] for r in (floor, ceil)]
     signal = f.pad(signal, signal_padding, mode=padding_mode)
 
     # Because PyTorch computes a *one-sided* FFT, we need the final dimension to
-    # have *even* length.  Just pad with one more zero if the final dimension is odd.
+    # have *even* length.  Just pad with one more zero if the final dimension is
+    # odd.
     signal_size = signal.size()  # original signal size without padding to even
     if signal.size(-1) % 2 != 0:
         signal = f.pad(signal, [0, 1])
@@ -171,14 +179,17 @@ class _FFTConv(nn.Module):
             in_channels: (int) Number of channels in input tensors
             out_channels: (int) Number of channels in output tensors
             kernel_size: (Union[int, Iterable[int]) Square radius of the kernel
-            padding: (Union[int, Iterable[int]) Number of zero samples to pad the
-                input on the last dimension. If str, "same" supported to pad input for size preservation.
-            padding_mode: (str) Padding mode to use from {constant, reflection, replication}.
-                          reflection not available for 3d.
-            stride: (Union[int, Iterable[int]) Stride size for computing output values.
+            padding: (Union[int, Iterable[int]) Number of zero samples to pad
+                the input on the last dimension. If str, "same" supported to pad
+                input for size preservation.
+            padding_mode: (str) Padding mode to use from {constant, reflection,
+                replication}. reflection not available for 3d.
+            stride: (Union[int, Iterable[int]) Stride size for computing output
+                values.
             dilation: (Union[int, Iterable[int]) Dilation rate for the kernel.
             groups: (int) Number of groups for the convolution.
-            bias: (bool) If True, includes bias, which is added after convolution
+            bias: (bool) If True, includes bias, which is added after
+                convolution
             ndim: (int) Number of dimensions of the input tensor.
         """
         super().__init__()
