@@ -24,7 +24,9 @@ def _get_conv_inputs(
     signal = torch.randn(batch_size, in_channels, *dims)
 
     kernel_size = to_ntuple(kernel_size, n=signal.ndim - 2)
-    weight = torch.randn(out_channels, in_channels, *kernel_size, requires_grad=True)
+    weight = torch.randn(
+        out_channels, in_channels, *kernel_size, requires_grad=True
+    )
     bias = torch.randn(out_channels, requires_grad=True)
 
     return signal, weight, bias
@@ -41,7 +43,9 @@ def benchmark_conv(
     signal, weight, bias = _get_conv_inputs(
         ndim=ndim, input_size=input_size, kernel_size=kernel_size
     )
-    return benchmark(conv_fn, signal, weight, bias=bias, num_iterations=num_iterations)
+    return benchmark(
+        conv_fn, signal, weight, bias=bias, num_iterations=num_iterations
+    )
 
 
 def benchmark_kernel_size(
@@ -113,13 +117,19 @@ if __name__ == "__main__":
     )
 
     for i, config in enumerate(configs):
-        fft = benchmark_kernel_size(fft=True, **config, desc=f"FFT {config['ndim']}D")
-        _plot_benchmarks(fft, config=config, ax=ax[0, i], color="r", label="FFT")
+        fft = benchmark_kernel_size(
+            fft=True, **config, desc=f"FFT {config['ndim']}D"
+        )
+        _plot_benchmarks(
+            fft, config=config, ax=ax[0, i], color="r", label="FFT"
+        )
 
         direct = benchmark_kernel_size(
             fft=False, **config, desc=f"Direct {config['ndim']}D"
         )
-        _plot_benchmarks(direct, config=config, ax=ax[0, i], color="b", label="Direct")
+        _plot_benchmarks(
+            direct, config=config, ax=ax[0, i], color="b", label="Direct"
+        )
 
     ax[0, 0].set_ylabel("Execution Time (ms)")
     plt.legend(["FFT", "Direct"])

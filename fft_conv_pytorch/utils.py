@@ -14,10 +14,12 @@ class Benchmark(NamedTuple):
         return f"BenchmarkResult(mean: {self.mean:.3e}, std: {self.std:.3e})"
 
     def __str__(self):
-        return f"({self.mean:.3e} \u00B1 {self.std:.3e}) s"
+        return f"({self.mean:.3e} \u00b1 {self.std:.3e}) s"
 
 
-def benchmark(fn: Callable, *args, num_iterations: int = 10, **kwargs) -> Benchmark:
+def benchmark(
+    fn: Callable, *args, num_iterations: int = 10, **kwargs
+) -> Benchmark:
     timer = Timer(
         "fn(*args, **kwargs)",
         globals={"fn": fn, "args": args, "kwargs": kwargs},

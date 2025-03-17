@@ -47,7 +47,9 @@ def to_ntuple(val: Union[int, Iterable[int]], n: int) -> Tuple[int, ...]:
         if len(out) == n:
             return out
         else:
-            raise ValueError(f"Cannot cast tuple of length {len(out)} to length {n}.")
+            raise ValueError(
+                f"Cannot cast tuple of length {len(out)} to length {n}."
+            )
     else:
         return n * (val,)
 
@@ -97,7 +99,9 @@ def fft_conv(
         padding_ = to_ntuple(padding, n=n)
 
     # internal dilation offsets
-    offset = torch.zeros(1, 1, *dilation_, device=signal.device, dtype=signal.dtype)
+    offset = torch.zeros(
+        1, 1, *dilation_, device=signal.device, dtype=signal.dtype
+    )
     offset[(slice(None), slice(None), *((0,) * n))] = 1.0
 
     # correct the kernel by cutting off unwanted dilation trailing zeros
