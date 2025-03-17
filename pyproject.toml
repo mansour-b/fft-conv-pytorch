@@ -1,0 +1,72 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["fft-conv-pytorch"]
+
+[project]
+name = "fft-conv-pytorch"
+version = "0.1.0"
+requires_python = ">=3.8"
+authors = [{name = "Mansour Benbakoura", email = "mansour.benbakoura@inria.fr"}]
+description = "FFT Convolution in Pytorch based on Frank Odom's package."
+readme = "README.md"
+dependencies = [
+    "numpy",
+    "torch>=1.8",
+]
+
+[project.optional-dependencies]
+dev = [
+    "isort",
+    "pytest",
+    "pytest-cov",
+    "ruff",
+]
+
+[tool.isort]
+line_length = 88
+multi_line_output = 3
+
+[tool.ruff]
+exclude = [
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".ipynb_checkpoints",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".vscode",
+    "__pypackages__",
+    "_build",
+    "build",
+    "dist",
+    "__cache__",
+]
+line-length = 80
+indent-width = 4
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+docstring-code-format = true
+docstring-code-line-length = "dynamic"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+
+[tool.ruff.lint.flake8-annotations]
+mypy-init-return = true
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = [
+    "ANN",
+    "COM812",
+    "D",
+    "INP001",
+    "S",
+    "SLF001",
+]
