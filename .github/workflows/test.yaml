@@ -13,7 +13,12 @@ jobs:
     strategy:
       matrix:
         python: ["3.8", "3.10", "3.12"]
-        torch: ["1.13", "2.5"]
+        torch: ["1.13", "2.2", "2.5"]
+        exclude:
+          - python: "3.8"
+            torch: "2.5"
+          - python: "3.12"
+            torch: "1.13"
 
     steps:
       - name: Checkout
@@ -27,7 +32,7 @@ jobs:
       - name: Install Package
         run: |
           pip install torch~=${{ matrix.torch }}.0
-          pip install .[test]
+          pip install .[dev]
 
       - name: Test
         run: |
