@@ -12,8 +12,8 @@ jobs:
 
     strategy:
       matrix:
-        python: ["3.7", "3.8", "3.9"]
-        torch: ["1.8", "1.9", "1.10"]
+        python: ["3.8", "3.10", "3.12"]
+        torch: ["1.13", "2.5"]
 
     steps:
       - name: Checkout
@@ -32,6 +32,6 @@ jobs:
       - name: Test
         run: |
           pytest --cov --cov-report term-missing --cov-fail-under 90 tests/
-          black --check .
+          ruff format .
           isort --diff .
-          flake8 .
+          ruff check .
